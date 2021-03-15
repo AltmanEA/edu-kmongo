@@ -45,6 +45,15 @@ fun fillStudentsAndCourse(fillCourse: Boolean = true): List<Student> {
     return students
 }
 
+fun setGrade(courseName: String, studentName: String, value: Int) =
+    mCourses.updateOne(
+        and(
+            Course::name eq courseName,
+            Course::grades / Grade::studentName eq studentName
+        ),
+        setValue(Course::grades.posOp / Grade::value, value)
+    )
+
 fun main() {
 
     println("\n --- Create study sheet --- \n")
@@ -53,15 +62,6 @@ fun main() {
     prettyPrintCursor(mCourses.find())
 
     println("\n --- Set grade --- \n")
-    fun setGrade(courseName: String, studentName: String, value: Int) =
-        mCourses.updateOne(
-            and(
-                Course::name eq courseName,
-                Course::grades / Grade::studentName eq studentName
-            ),
-            setValue(Course::grades.posOp / Grade::value, value)
-        )
-
     setGrade("Math", "Penny", 5)
     setGrade("Math", "Sheldon", 6)
     prettyPrintCursor(mCourses.find(Course::name eq "Math"))
