@@ -7,7 +7,7 @@ import org.litote.kmongo.gt
 
 fun main() {
 
-    val population = database.getCollection<Population>().apply { drop() }
+    val population = mongoDatabase.getCollection<Population>().apply { drop() }
 
     println("\n --- Import population from file --- \n")
     // got from https://datahub.io/core/population

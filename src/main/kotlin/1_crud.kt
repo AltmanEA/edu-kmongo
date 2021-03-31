@@ -7,7 +7,7 @@ import org.litote.kmongo.*
 @Serializable
 data class Scholar(val name: String, val group: String)
 
-val scholars = database.getCollection<Scholar>().apply { drop() }
+val scholars = mongoDatabase.getCollection<Scholar>().apply { drop() }
 
 fun main() {
 

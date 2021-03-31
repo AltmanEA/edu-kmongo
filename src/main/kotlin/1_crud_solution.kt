@@ -7,7 +7,7 @@ fun main() {
     @Serializable
     data class Count(val name: String, val value: Int = 0)
 
-    val counts = database.getCollection<Count>().apply { drop() }
+    val counts = mongoDatabase.getCollection<Count>().apply { drop() }
 
     counts.insertMany(
         listOf("Tables", "Figures", "Equations")

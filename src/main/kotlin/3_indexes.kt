@@ -13,7 +13,7 @@ data class Population(
     @SerialName("Year") val year: Int
 )
 
-val population = database.getCollection<Population>().apply { drop() }
+val population = mongoDatabase.getCollection<Population>().apply { drop() }
 
 fun main() {
     println("\n --- Import population from file --- \n")

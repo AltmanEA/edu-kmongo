@@ -29,8 +29,8 @@ data class Course(
 
 val json = Json { serializersModule = IdKotlinXSerializationModule }
 
-val mStudents = database.getCollection<Student>().apply { drop() }
-val mCourses = database.getCollection<Course>().apply { drop() }
+val mStudents = mongoDatabase.getCollection<Student>().apply { drop() }
+val mCourses = mongoDatabase.getCollection<Course>().apply { drop() }
 
 fun fillStudentsAndCourse(fillCourse: Boolean = true): List<Student> {
     val students = listOf("Penny", "Amy").map { Student(it, "Girls") } +
