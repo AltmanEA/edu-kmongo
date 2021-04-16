@@ -105,9 +105,18 @@ fun main() {
             )
         )
     )
-
+    @Serializable
+    data class ResultId(
+        val name: String,
+        val course: String,
+    )
+    @Serializable
+    data class Result(
+        val _id: ResultId,
+        val grades: Int
+    )
     prettyPrintCursor(
-        mStudentsB.aggregate<UnwindStudentCourseB>(
+        mStudentsB.aggregate<Result>(
             match(
                 not(StudentB::grades elemMatch (GradeB::value lte 3))
             ),
@@ -118,9 +127,11 @@ fun main() {
                 UnwindStudentCourseB::gradesValue from UnwindStudentB::grades / GradeB::value,
             ),
             group(
-                UnwindStudentCourseB::name,
-                UnwindStudentCourseB::courseName sum UnwindStudentCourseB::courseName,
-                UnwindStudentCourseB::gradesValue sum UnwindStudentCourseB::gradesValue
+                fields(
+                    ResultId::name from UnwindStudentCourseB::name,
+                    ResultId::course from UnwindStudentCourseB::courseName
+                ),
+                Result::grades max UnwindStudentCourseB::gradesValue,
             )
         )
     )
