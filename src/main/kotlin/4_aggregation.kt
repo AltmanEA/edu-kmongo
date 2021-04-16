@@ -1,10 +1,6 @@
-import com.mongodb.client.model.BsonField
 import kotlinx.serialization.Serializable
-import org.bson.conversions.Bson
 import org.litote.kmongo.*
 import java.util.*
-import com.mongodb.client.model.Accumulators.sum
-import kotlin.reflect.KProperty1
 
 fun fillStudentAndCourseWithGrades() {
     val students = fillStudentsAndCourse(false)
@@ -107,20 +103,12 @@ fun main() {
         val _id: String,
         val grades: Int
     )
-    val history = mCourses.find(Course::name eq "History").first()
-    val raj = mStudents.find(Student::name eq "Raj").first()
-    val newHistory = history.copy(
-        grades = history.grades +
-                Grade(raj.id, raj.name, 5, Date(System.currentTimeMillis()))
-    )
-    mCourses.updateOne(Course::name eq "History", newHistory)
     prettyPrintCursor(
         mCourses.aggregate<Result>(
             unwind("\$grades"),
-            match(UnwindCourse::grades / Grade::studentName eq "Raj"),
             group(
-                UnwindCourse::name,
-                Result::grades max UnwindCourse::grades / Grade::value
+                UnwindCourse::grades / Grade::studentName,
+                Result::grades sum UnwindCourse::grades / Grade::value
             )
         )
     )
